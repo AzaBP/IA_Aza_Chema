@@ -130,11 +130,11 @@ def show_solution(node, expanded, generated):
         path.insert(0, node)
         node = node.parent
     if path:
-        print "Solution took %d steps" % (len(path) - 1)
-        print path[0].state
+        print("Solution took %d steps" % (len(path) - 1))
+        print(path[0].state)
         for n in path[1:]:
-            print n.action
-            print n.state
-    print "Nodes expanded:  %d" % expanded
-    print "Nodes generated: %d\n" % generated
+            print(n.action)
+            print(n.state)
+    print("Nodes expanded:  %d" % expanded)
+    print("Nodes generated: %d\n" % generated)
 

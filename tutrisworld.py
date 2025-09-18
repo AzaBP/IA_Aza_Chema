@@ -1,6 +1,6 @@
 from state import *
-from Tkinter import *
-import tkMessageBox
+from tkinter import *
+from tkinter import messagebox
 
 class TutrisWorld:
 
@@ -67,8 +67,8 @@ class TutrisWorld:
 			tkMessageBox.showinfo("Finished!", "Goal achieved! :)")
 			return
 		elif len(self.steps) == 0:
-			print self.state
-			print self.final_state
+			print(self.state)
+			print(self.final_state)
 			self.b_next.config(state=DISABLED)
 			self.b_auto.config(state=DISABLED)
 			self.draw()
@@ -118,5 +118,5 @@ if __name__ == "__main__":
 		steps = steps = [(1, 'LEFT'), (2, 'RIGHT'), (0, 'RIGHT'), (3, 'DOWN'), (1, 'DOWN'), (3, 'DOWN'), (1, 'DOWN')]
 		world = TutrisWorld(init_state, goal_state, steps)
 	except Exception as ex:
-		print "Error in TutrisWorld -->", ex.message
+		print("Error in TutrisWorld -->", ex.message)
 		
