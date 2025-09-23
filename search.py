@@ -45,16 +45,18 @@ def uninformed_search(initial_state, goal_state, frontier):
     initial_node = Node(initial_state, None, None)
     expanded = 0
     generated = 0
-    
-    """
-    Rellenar con el codigo necesario para realizar una busqueda no informada
-    siguiendo el pseudocodigo de los apuntes (Graph-Search)
-    La funcion debe devolver una tupla con 3 variables:
-        1. Nodo del grafo con el estado objetivo (None si no se ha alcanzado el objetivo)
-        2. Numero de nodos expandidos (expanded)
-        3. Numero de nodos generados (generated)
-    """
-    
+    frontier.push(initial_node)
+    explored = set()
+    while not frontier.is_empty():
+        node = frontier.pop()
+        if node.state == goal_state:
+            return (node, expanded, generated)
+        explored.add(node.state)
+        expanded += 1
+        for child in node.expand():
+            if (child.state not in explored) and (not frontier.contains_state(child.state)):
+                frontier.push(child)
+                generated += 1
     return (None, expanded, generated)
     
 #----------------------------------------------------------------------
@@ -89,19 +91,22 @@ def informed_search(initial_state, goal_state, frontier, heuristic):
     """
 
     initial_node = Node(initial_state, None, None)
+    initial_node.h = heuristic(initial_state, goal_state)
     expanded = 0
     generated = 0
-    
-    """
-    Rellenar con el codigo necesario para realizar una busqueda no informada
-    siguiendo el pseudocodigo de los apuntes (Graph-Search), modificada para
-    actualizar el valor heuristico (h) de los nodos
-    La funcion debe devolver una tupla con 3 variables:
-        1. Nodo del grafo con el estado objetivo (None si no se ha alcanzado el objetivo)
-        2. Numero de nodos expandidos (expanded)
-        3. Numero de nodos generados (generated)
-    """
-    
+    frontier.push(initial_node)
+    explored = set()
+    while not frontier.is_empty():
+        node = frontier.pop()
+        if node.state == goal_state:
+            return (node, expanded, generated)
+        explored.add(node.state)
+        expanded += 1
+        for child in node.expand():
+            child.h = heuristic(child.state, goal_state)
+            if (child.state not in explored) and (not frontier.contains_state(child.state)):
+                frontier.push(child)
+                generated += 1
     return (None, expanded, generated)
     
 #----------------------------------------------------------------------
