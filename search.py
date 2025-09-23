@@ -63,15 +63,24 @@ def uninformed_search(initial_state, goal_state, frontier):
 # Test functions for uninformed search
 
 def breadth_first(initial_state, goal_state):
-    frontier = None # Indicar estructura de datos adecuada para breadth_first
+    frontier = Queue()
+    frontier.push = frontier.insert
+    frontier.pop = frontier.remove
+    frontier.contains_state = lambda state: frontier.contains(Node(state, None, None))
     return uninformed_search(initial_state, goal_state, frontier)
 
 def depth_first(initial_state, goal_state):
-    frontier = None # Indicar estructura de datos adecuada para depth_first
+    frontier = Stack()
+    frontier.push = frontier.insert
+    frontier.pop = frontier.remove
+    frontier.contains_state = lambda state: frontier.contains(Node(state, None, None))
     return uninformed_search(initial_state, goal_state, frontier)
 
 def uniform_cost(initial_state, goal_state):
-    frontier = None # Indicar estructura de datos adecuada para uniform_cost
+    frontier = PriorityQueue(lambda node: node.g)
+    frontier.push = frontier.insert
+    frontier.pop = frontier.remove
+    frontier.contains_state = lambda state: frontier.contains(Node(state, None, None))
     return uninformed_search(initial_state, goal_state, frontier)
 
 
@@ -113,12 +122,18 @@ def informed_search(initial_state, goal_state, frontier, heuristic):
 # Test functions for informed search
 
 def greedy(initial_state, goal_state, heuristic):
-    frontier = None # Indicar estructura de datos adecuada para greedy
+    frontier = PriorityQueue(lambda node: node.h)
+    frontier.push = frontier.insert
+    frontier.pop = frontier.remove
+    frontier.contains_state = lambda state: frontier.contains(Node(state, None, None))
     return informed_search(initial_state, goal_state, frontier, heuristic)
 
 def a_star(initial_state, goal_state, heuristic):
-    frontier = None # Indicar estructura de datos adecuada para A*
-    return informed_search(initial_state, goal_state, frontier, heuristic) 
+    frontier = PriorityQueue(lambda node: node.g + node.h)
+    frontier.push = frontier.insert
+    frontier.pop = frontier.remove
+    frontier.contains_state = lambda state: frontier.contains(Node(state, None, None))
+    return informed_search(initial_state, goal_state, frontier, heuristic)
 
 #---------------------------------------------------------------------
 # Heuristic functions
