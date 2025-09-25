@@ -11,29 +11,17 @@ class Piece:
         self.symbol = ' '
         self.shape = []
         
-    def occupied_positions(self):
-        """
-        Rellenar con el codigo necesario para generar una lista con las posiciones
-        ocupadas con una pieza teniendo en cuenta su situacion (self.x, self.y) y
-        la forma de la pieza (reflejada en la lista self.shape)
-        Ejemplos:
-          PieceBar(2,4)    --> [(2, 4), (3, 4), (4, 4), (5, 4)]
-          PieceL(1,5)      --> [(1, 5), (2, 5), (3, 5), (3, 6)]
-          PieceS(0,1)      --> [(0, 1), (1, 1), (1, 2), (2, 2)]
-          PieceSquare(3,3) --> [(3, 3), (4, 3), (3, 4), (4, 4)]
-        """
-        return []
+        def occupied_positions(self):
+                # Devuelve las posiciones absolutas ocupadas por la pieza
+                return [(self.x + dx, self.y + dy) for (dx, dy) in self.shape]
     
     def apply_movement(self, movement):
-        """
-        Rellenar con el codigo necesario para modificar la posicion de la pieza
-        segun los movimientos 'LEFT', 'RIGHT' y 'DOWN'. La funcion no debe 
-        devolver nada (es decir, no debe tener una clausula return)
-        Ejemplos:
-          PieceBar(2,4) + 'LEFT'  = PieceBar(1,4)
-          PieceBar(2,4) + 'RIGHT' = PieceBar(3,4)
-          PieceBar(2,4) + 'DOWN'  = PieceBar(2,5)
-        """
+        if movement == 'LEFT':
+            self.x -= 1
+        elif movement == 'RIGHT':
+            self.x += 1
+        elif movement == 'DOWN':
+            self.y += 1
     
     def copy(self):
         return None

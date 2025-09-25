@@ -27,36 +27,53 @@ class TutrisState:
     
     
     def successor(self, action):
-        
-        """
-        Rellenar con el codigo necesario para generar un nuevo estado a partir del actual
-        y una accion proporcionada como parametro. La accion tiene el formato 
-        (<num_pieza>, <movimiento>), donde <num_pieza> es un numero entero indicando la
-        pieza a mover, y <movimiento> puede ser 'LEFT', 'RIGHT' o 'DOWN'. La funcion debe 
-        devolver None si el estado generado es invalido segun las especificaciones del problema
-        NOTA: las piezas del estado actual no deben usarse directamente en el estado objetivo,
-        sino realizar copias de las mismas mediante el metodo copy()
-        """
-        return None
+        # Desempaquetar la acción
+        num_pieza, movimiento = action
+        # Copiar todas las piezas
+        nuevas_piezas = [p.copy() for p in self.piece_list]
+        # Seleccionar la pieza a mover
+        pieza = nuevas_piezas[num_pieza]
+        # Aplicar el movimiento
+        if movimiento == 'LEFT':
+            pieza.move_left()
+        elif movimiento == 'RIGHT':
+            pieza.move_right()
+        elif movimiento == 'DOWN':
+            pieza.move_down()
+        else:
+            return None  # Movimiento no válido
+        # Crear el nuevo estado
+        nuevo_estado = TutrisState(nuevas_piezas, self.max_x, self.max_y)
+        # Validar el nuevo estado
+        if nuevo_estado.is_valid():
+            return nuevo_estado
+        else:
+            return None
         
     def is_valid(self):
-        """
-        Rellenar con el codigo necesario para determinar si un estado es valido. Se consideran
-        validos aquellos estados en los que las piezas no intersectan entre si y todas ellas
-        estan situadas en los limites del escenario (delimitado por [0..max_x-1][0..max_y-1])
-        NOTA: puede ser interesante utilizar los conjuntos (set) de Python para comprobar las
-        colisiones entre piezas
-        """
+        # Comprobar que todas las piezas están dentro de los límites y no se solapan
+        all_cells = set()
+        for p in self.piece_list:
+            # Obtener las celdas ocupadas por la pieza
+            cells = p.get_cells() if hasattr(p, 'get_cells') else p.cells
+            for (x, y) in cells:
+                # Comprobar límites
+                if not (0 <= x < self.max_x and 0 <= y < self.max_y):
+                    return False
+                # Comprobar colisión
+                if (x, y) in all_cells:
+                    return False
+                all_cells.add((x, y))
         return True
     
     def next_states(self):
         new_states = []
-
-        """
-        Rellenar con el codigo necesario para generar la lista de nuevos estados accesibles
-        desde el estado actual, aplicando las diferentes acciones posibles. Los estados deben 
-        ser validos segun las especificaciones del problema. La lista debe estar formada por 
-        pares (nuevo_estado, accion)
-        """
+        movimientos = ['LEFT', 'RIGHT', 'DOWN']
+        for i in range(len(self.piece_list)):
+            for mov in movimientos:
+                accion = (i, mov)
+                nuevo_estado = self.successor(accion)
+                if nuevo_estado is not None:
+                    new_states.append((nuevo_estado, accion))
         return new_states
 
