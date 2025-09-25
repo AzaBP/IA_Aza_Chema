@@ -57,14 +57,14 @@ class TutrisWorld:
 		self.state = self.state.successor(step)
 		if self.state == None:
 			self.b_auto.config(state=DISABLED)
-			tkMessageBox.showerror("Error", "Incorrect action: %s" % str(step))
+			messagebox.showerror("Error", "Incorrect action: %s" % str(step))
 			return
 		# FINISH CONDITIONS (GOAL ACHIEVED vs GOAL NOT ACHIEVED)
 		if self.state == self.final_state:
 			self.b_next.config(state=DISABLED)
 			self.b_auto.config(state=DISABLED)
 			self.draw()
-			tkMessageBox.showinfo("Finished!", "Goal achieved! :)")
+			messagebox.showinfo("Finished!", "Goal achieved! :)")
 			return
 		elif len(self.steps) == 0:
 			print(self.state)
@@ -72,7 +72,7 @@ class TutrisWorld:
 			self.b_next.config(state=DISABLED)
 			self.b_auto.config(state=DISABLED)
 			self.draw()
-			tkMessageBox.showwarning("Finished", "No steps left")
+			messagebox.showwarning("Finished", "No steps left")
 			return
 		# REDRAW
 		self.draw()		
@@ -118,5 +118,5 @@ if __name__ == "__main__":
 		steps = steps = [(1, 'LEFT'), (2, 'RIGHT'), (0, 'RIGHT'), (3, 'DOWN'), (1, 'DOWN'), (3, 'DOWN'), (1, 'DOWN')]
 		world = TutrisWorld(init_state, goal_state, steps)
 	except Exception as ex:
-		print("Error in TutrisWorld -->", ex.message)
+		print("Error in TutrisWorld -->", ex)
 		

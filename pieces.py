@@ -2,6 +2,14 @@
 #--------------------------------------------------------------------------------
 
 class Piece:
+    def move_left(self):
+        self.x -= 1
+
+    def move_right(self):
+        self.x += 1
+
+    def move_down(self):
+        self.y += 1
     """
     Class representing the pieces of the Tutris World
     """
@@ -10,10 +18,10 @@ class Piece:
         self.y = y
         self.symbol = ' '
         self.shape = []
-        
-        def occupied_positions(self):
-                # Devuelve las posiciones absolutas ocupadas por la pieza
-                return [(self.x + dx, self.y + dy) for (dx, dy) in self.shape]
+
+    def occupied_positions(self):
+        # Devuelve las posiciones absolutas ocupadas por la pieza
+        return [(self.x + dx, self.y + dy) for (dx, dy) in self.shape]
     
     def apply_movement(self, movement):
         if movement == 'LEFT':

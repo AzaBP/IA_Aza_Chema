@@ -54,9 +54,7 @@ class TutrisState:
         # Comprobar que todas las piezas están dentro de los límites y no se solapan
         all_cells = set()
         for p in self.piece_list:
-            # Obtener las celdas ocupadas por la pieza
-            cells = p.get_cells() if hasattr(p, 'get_cells') else p.cells
-            for (x, y) in cells:
+            for (x, y) in p.occupied_positions():
                 # Comprobar límites
                 if not (0 <= x < self.max_x and 0 <= y < self.max_y):
                     return False
