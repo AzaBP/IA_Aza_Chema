@@ -24,6 +24,16 @@ class TutrisState:
             return True
         else:
             return False
+
+    def key(self):
+        """Return a canonical, hashable key for the state.
+
+        The key is a tuple of (class_name, x, y) for each piece in order.
+        """
+        return tuple((p.__class__.__name__, p.x, p.y) for p in self.piece_list)
+
+    def __hash__(self):
+        return hash(self.key())
     
     
     def successor(self, action):

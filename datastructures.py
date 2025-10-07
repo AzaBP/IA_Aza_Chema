@@ -113,7 +113,7 @@ class PriorityQueue:
 
     def parent(self, i):
         # returns the position of the parent of element i
-        return i / 2
+        return i // 2
 
     def left(self, i):
         # returns the position of the left child of element i

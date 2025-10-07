@@ -27,6 +27,8 @@ class Node:
         successors = []
         for (new_state, action) in self.state.next_states():
             new_node = Node(new_state, self, action)
+            # Update path cost: each move has unit cost
+            new_node.g = self.g + 1
             successors.append(new_node)
         return successors
 
@@ -140,6 +142,24 @@ def a_star(initial_state, goal_state, heuristic):
 
 def h1(current_state, goal_state):
     return 0
+
+
+def h_man(current_state, goal_state):
+    """Heurística Manhattan por pieza.
+
+    Para cada pieza en current_state se toma la posición de referencia (x,y)
+    y la posición correspondiente en goal_state (mismo índice de lista).
+    La heurística es la suma de las distancias Manhattan |dx|+|dy|.
+    """
+    h = 0
+    for i in range(len(current_state.piece_list)):
+        p_curr = current_state.piece_list[i]
+        p_goal = goal_state.piece_list[i]
+        # Usamos la referencia (x,y) de cada pieza
+        dx = abs(p_curr.x - p_goal.x)
+        dy = abs(p_curr.y - p_goal.y)
+        h += dx + dy
+    return h
 
 
 #----------------------------------------------------------------------

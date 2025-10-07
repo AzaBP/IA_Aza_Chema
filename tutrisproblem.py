@@ -32,9 +32,9 @@ if not goal_state.is_valid():
 #------------------------------------------------------------
 
 # Breadth First Search algorithm
-start = time.clock()
+start = time.perf_counter()
 solution_bf, expanded, generated = breadth_first(init_state, goal_state)
-end = time.clock()
+end = time.perf_counter()
 if solution_bf != None:
     print("breadth_first found a solution after %.2f seconds..." % (end - start))
 else:
@@ -42,9 +42,9 @@ else:
 show_solution(solution_bf, expanded, generated)
 
 # Depth First Search algorithm
-start = time.clock()
+start = time.perf_counter()
 solution_df, expanded, generated = depth_first(init_state, goal_state)
-end = time.clock()
+end = time.perf_counter()
 if solution_df != None:
     print("depth_first found a solution after %.2f seconds..." % (end - start))
 else:
@@ -52,9 +52,9 @@ else:
 show_solution(solution_df, expanded, generated)
 
 # Uniform Cost Search algorithm
-start = time.clock()
+start = time.perf_counter()
 solution_uc, expanded, generated = uniform_cost(init_state, goal_state)
-end = time.clock()
+end = time.perf_counter()
 if solution_uc != None:
     print("uniform_cost found a solution after %.2f seconds..." % (end - start))
 else:
@@ -64,24 +64,43 @@ show_solution(solution_uc, expanded, generated)
 #------------------------------------------------------------
 
 # greedy Search algorithm
-start = time.clock()
+start = time.perf_counter()
 solution_greedy, expanded, generated = greedy(init_state, goal_state, h1)
-end = time.clock()
+end = time.perf_counter()
 if solution_greedy != None:
-    print("greedy found a solution after %.2f seconds..." % (end - start))
+    print("greedy (h1) found a solution after %.2f seconds..." % (end - start))
 else:
-    print("greedy failed after %.2f seconds..." % (end - start))
+    print("greedy (h1) failed after %.2f seconds..." % (end - start))
 show_solution(solution_greedy, expanded, generated)
 
-# A* Search algorithm
-start = time.clock()
+# A* Search algorithm (h1)
+start = time.perf_counter()
 solution_astar, expanded, generated = a_star(init_state, goal_state, h1)
-end = time.clock()
+end = time.perf_counter()
 if solution_astar != None:
-    print("A* found a solution after %.2f seconds..." % (end - start))
+    print("A* (h1) found a solution after %.2f seconds..." % (end - start))
 else:
-    print("A* failed after %.2f seconds..." % (end - start))
+    print("A* (h1) failed after %.2f seconds..." % (end - start))
 show_solution(solution_astar, expanded, generated)
+
+# Compare Greedy and A* with h_man heuristic
+start = time.perf_counter()
+solution_greedy_hm, expanded_gm, generated_gm = greedy(init_state, goal_state, h_man)
+end = time.perf_counter()
+if solution_greedy_hm != None:
+    print("greedy (h_man) found a solution after %.2f seconds..." % (end - start))
+else:
+    print("greedy (h_man) failed after %.2f seconds..." % (end - start))
+show_solution(solution_greedy_hm, expanded_gm, generated_gm)
+
+start = time.perf_counter()
+solution_astar_hm, expanded_am, generated_am = a_star(init_state, goal_state, h_man)
+end = time.perf_counter()
+if solution_astar_hm != None:
+    print("A* (h_man) found a solution after %.2f seconds..." % (end - start))
+else:
+    print("A* (h_man) failed after %.2f seconds..." % (end - start))
+show_solution(solution_astar_hm, expanded_am, generated_am)
 
 #------------------------------------------------------------
 
