@@ -12,7 +12,7 @@ init_list3 = [PieceBar(4,6), PieceL(1,5), PieceS(3,4), PieceSquare(4,2)]
 goal_list = [PieceBar(2,7), PieceL(0,5), PieceS(5,6), PieceSquare(0,6)]
 
 init_state = TutrisState(init_list1)  # Initial state of the problem
-goal_state = TutrisState(goal_list)   # Goal state of te problem
+goal_state = TutrisState(goal_list)   # Goal state of the problem
 
 
 # Consistency checks
@@ -118,4 +118,55 @@ try:
     world = TutrisWorld(init_state, goal_state, steps)
 except Exception as ex:
     print("Error in TutrisWorld -->", ex.message)
+
+def h1(current_state, goal_state):
+    total_distance = 0
+    # Calcular distancia Manhattan para cada pieza
+    for i in range(len(current_state.piece_list)):
+        current_piece = current_state.piece_list[i]
+        goal_piece = goal_state.piece_list[i]
+        # Distancia Manhattan = |x1-x2| + |y1-y2|
+        distance = abs(current_piece.x - goal_piece.x) + abs(current_piece.y - goal_piece.y)
+        total_distance += distance
+    return total_distance
+
+def h2(current_state, goal_state):
+    # Manhattan + Importancia a piezas grandes 
+    total_distance = 0
+    weights = {'PieceBar': 2.0, 'PieceL': 1.75, 'PieceS': 1.5, 'PieceSquare': 1.25}
+    
+    for i in range(len(current_state.piece_list)):
+        current_piece = current_state.piece_list[i]
+        goal_piece = goal_state.piece_list[i]
+        
+        # Distancia Manhattan ponderada por tipo de pieza
+        distance = (abs(current_piece.x - goal_piece.x) + 
+                   abs(current_piece.y - goal_piece.y))
+        weight = weights[current_piece.__class__.__name__]
+        total_distance += distance * weight
+        
+    return total_distance
+
+# Prueba con h1
+print("\nPrueba con heurística h1:")
+start = time.clock()
+solution_astar_h1, expanded, generated = a_star(init_state, goal_state, h1)
+end = time.clock()
+if solution_astar_h1 != None:
+    print("A* (h1) found a solution after %.2f seconds..." % (end - start))
+else:
+    print("A* (h1) failed after %.2f seconds..." % (end - start))
+show_solution(solution_astar_h1, expanded, generated)
+
+# Prueba con h2
+print("\nPrueba con heurística h2:")
+start = time.clock()
+solution_astar_h2, expanded, generated = a_star(init_state, goal_state, h2)
+end = time.clock()
+if solution_astar_h2 != None:
+    print("A* (h2) found a solution after %.2f seconds..." % (end - start))
+else:
+    print("A* (h2) failed after %.2f seconds..." % (end - start))
+show_solution(solution_astar_h2, expanded, generated)
+
 
