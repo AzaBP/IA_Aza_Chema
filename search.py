@@ -4,7 +4,7 @@ from datastructures import *
 
 class Node:
     """
-    This class is used to represent nodes of the search tree.  Each
+    This class is used to represent nodes of the search tree. Each
     node contains a state representation, a reference to the node's
     parent node, a string that describes the action that generated
     the node's state from the parent state, and the path cost g from
@@ -47,17 +47,18 @@ def uninformed_search(initial_state, goal_state, frontier):
     initial_node = Node(initial_state, None, None)
     expanded = 0
     generated = 0
-    frontier.push(initial_node)
+    frontier.insert(initial_node)
     explored = set()
     while not frontier.is_empty():
-        node = frontier.pop()
+        node = frontier.remove()
         if node.state == goal_state:
             return (node, expanded, generated)
         explored.add(node.state)
         expanded += 1
         for child in node.expand():
-            if (child.state not in explored) and (not frontier.contains_state(child.state)):
-                frontier.push(child)
+            in_frontier = any (n.state == child.state for n in frontier.contents)
+            if child.state not in explored and not in_frontier:
+                frontier.insert(child)
                 generated += 1
     return (None, expanded, generated)
     
@@ -68,21 +69,28 @@ def breadth_first(initial_state, goal_state):
     frontier = Queue()
     frontier.push = frontier.insert
     frontier.pop = frontier.remove
-    frontier.contains_state = lambda state: frontier.contains(Node(state, None, None))
+    frontier.is_empty = frontier.is_empty
+    frontier.contains_state = lambda state: any (
+        node.state == state for node in frontier.contents if hasattr (frontier, 'contents')
+    )
     return uninformed_search(initial_state, goal_state, frontier)
 
 def depth_first(initial_state, goal_state):
     frontier = Stack()
     frontier.push = frontier.insert
     frontier.pop = frontier.remove
-    frontier.contains_state = lambda state: frontier.contains(Node(state, None, None))
+    frontier.contains_state = lambda state: any(
+        node.state == state for node in frontier.contents if hasattr(frontier, 'contents')
+    )
     return uninformed_search(initial_state, goal_state, frontier)
 
 def uniform_cost(initial_state, goal_state):
     frontier = PriorityQueue(lambda node: node.g)
     frontier.push = frontier.insert
     frontier.pop = frontier.remove
-    frontier.contains_state = lambda state: frontier.contains(Node(state, None, None))
+    frontier.contains_state = lambda state: any(
+        node.state == state for node in frontier.contents if hasattr(frontier, 'contents')
+    ) and frontier.contents
     return uninformed_search(initial_state, goal_state, frontier)
 
 
@@ -140,27 +148,73 @@ def a_star(initial_state, goal_state, heuristic):
 #---------------------------------------------------------------------
 # Heuristic functions
 
-def h1(current_state, goal_state):
-    return 0
+def h0_zero(current_state, goal_state): 
+    return 0 # Equivalente a busqueda no informada
 
-
-def h_man(current_state, goal_state):
-    """Heurística Manhattan por pieza.
-
-    Para cada pieza en current_state se toma la posición de referencia (x,y)
-    y la posición correspondiente en goal_state (mismo índice de lista).
-    La heurística es la suma de las distancias Manhattan |dx|+|dy|.
-    """
-    h = 0
+def h1_manhattan(current_state, goal_state):
+    total_distance = 0
+    # Calcular distancia Manhattan para cada pieza
     for i in range(len(current_state.piece_list)):
-        p_curr = current_state.piece_list[i]
-        p_goal = goal_state.piece_list[i]
-        # Usamos la referencia (x,y) de cada pieza
-        dx = abs(p_curr.x - p_goal.x)
-        dy = abs(p_curr.y - p_goal.y)
-        h += dx + dy
-    return h
+        current_piece = current_state.piece_list[i]
+        goal_piece = goal_state.piece_list[i]
+        # Distancia Manhattan = |x1-x2| + |y1-y2|
+        distance = (abs(current_piece.x - goal_piece.x) + 
+                    abs(current_piece.y - goal_piece.y))
+        total_distance += distance
+    return total_distance
 
+def h2_weighted_manhattan(current_state, goal_state):
+    # Manhattan + Importancia a piezas grandes 
+    total_distance = 0
+    weights = {'PieceBar': 2.0, 'PieceL': 1.75, 'PieceS': 1.5, 'PieceSquare': 1.25}
+    for i in range(len(current_state.piece_list)):
+        current_piece = current_state.piece_list[i]
+        goal_piece = goal_state.piece_list[i]
+        # Distancia Manhattan ponderada por tipo de pieza
+        distance = (abs(current_piece.x - goal_piece.x) + 
+                    abs(current_piece.y - goal_piece.y))
+        weight = weights.get[current_piece.__class__.__name__, 1.0]
+        total_distance += distance * weight
+    return total_distance
+
+def h3_blocking_pieces(current_state, goal_state):
+    """
+    Heurística 3: Cuenta piezas que están en el camino de otras
+    Más sofisticada - considera interferencias entre piezas
+    """
+    blocking_count = 0
+    current_positions = set()
+    
+    # Obtener todas las posiciones ocupadas en estado actual
+    for piece in current_state.piece_list:
+        current_positions.update(piece.occupied_positions())
+    
+    # Para cada pieza, verificar si su camino al objetivo está bloqueado
+    for i in range(len(current_state.piece_list)):
+        current_piece = current_state.piece_list[i]
+        goal_piece = goal_state.piece_list[i]
+        
+        # Si la pieza necesita moverse horizontalmente
+        if current_piece.x != goal_piece.x:
+            # Verificar si hay piezas en el camino horizontal
+            step_x = 1 if goal_piece.x > current_piece.x else -1
+            for x in range(current_piece.x + step_x, goal_piece.x, step_x):
+                temp_positions = [(x + dx, current_piece.y + dy) for (dx, dy) in current_piece.shape]
+                if any(pos in current_positions for pos in temp_positions):
+                    blocking_count += 1
+                    break
+        
+        # Si la pieza necesita moverse verticalmente  
+        if current_piece.y != goal_piece.y:
+            # Verificar si hay piezas en el camino vertical
+            step_y = 1 if goal_piece.y > current_piece.y else -1
+            for y in range(current_piece.y + step_y, goal_piece.y, step_y):
+                temp_positions = [(current_piece.x + dx, y + dy) for (dx, dy) in current_piece.shape]
+                if any(pos in current_positions for pos in temp_positions):
+                    blocking_count += 1
+                    break
+    
+    return blocking_count
 
 #----------------------------------------------------------------------
 
