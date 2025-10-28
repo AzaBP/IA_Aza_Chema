@@ -173,14 +173,13 @@ def h2_weighted_manhattan(current_state, goal_state):
         # Distancia Manhattan ponderada por tipo de pieza
         distance = (abs(current_piece.x - goal_piece.x) + 
                     abs(current_piece.y - goal_piece.y))
-        weight = weights.get[current_piece.__class__.__name__, 1.0]
+        weight = weights.get(current_piece.__class__.__name__, 1.0)
         total_distance += distance * weight
     return total_distance
 
 def h3_blocking_pieces(current_state, goal_state):
     """
     Heurística 3: Cuenta piezas que están en el camino de otras
-    Más sofisticada - considera interferencias entre piezas
     """
     blocking_count = 0
     current_positions = set()

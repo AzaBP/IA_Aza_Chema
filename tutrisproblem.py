@@ -16,81 +16,113 @@ def reconstruct_path(solution_node):
     return steps
 
 def test_algorithm(algorithm, algorithm_name, init_state, goal_state, heuristic=None):
-    print("\n --- Probando %s ---" % algorithm_name)
-    start = time.perf_counter()
-    if heuristic:
-        solution, expanded, generated = algorithm(init_state, goal_state, heuristic)
-    else:
-        solution, expanded, generated = algorithm(init_state, goal_state)
-    end = time.perf_counter()
+    print("\n --- Probando %s ---" + algorithm_name)
+    start_time = time.perf_counter()
+    try:
+        if heuristic:
+            solution, expanded, generated = algorithm(init_state, goal_state, heuristic)
+        else:
+            solution, expanded, generated = algorithm(init_state, goal_state)
+    except Exception as e:
+        print("Error durante la ejecucion de %s: %s" % (algorithm_name, str(e)))
+        return None, [], 0, 0, float('inf')
+
+    end_time = time.perf_counter()
+    execution_time = end_time - start_time
     
     if solution != None:
         steps = reconstruct_path(solution)
-        print("Solucion encontrada para %s en %.2f segundos" % (algorithm_name, end - start))
+        print("Solucion encontrada para %s en %.3f segundos" % (algorithm_name, execution_time))
         print("  Pasos: %d, Expandidos: %d, Generados: %d" % (len(steps), expanded, generated))
-        show_solution(solution, expanded, generated)
-        return solution, steps, expanded, generated
+        #show_solution(solution, expanded, generated)####################################
+        return solution, steps, expanded, generated, execution_time ######################################
     else:
-        print("Solucion no encontrada para %s en %.2f segundos" % (algorithm_name, end - start))
+        print("Solucion no encontrada para %s en %.3f segundos" % (algorithm_name, execution_time))
         print("  Expandidos: %d, Generados: %d" % (expanded, generated))
-        return None, [], expanded, generated
-
-# Initial states
-init_list1 = [PieceBar(1,7), PieceL(1,3), PieceS(4,6), PieceSquare(0,4)]
-init_list2 = [PieceBar(4,6), PieceL(1,5), PieceS(5,4), PieceSquare(0,3)]
-init_list3 = [PieceBar(4,6), PieceL(1,5), PieceS(3,4), PieceSquare(4,2)]
-
-# Objective state
-goal_list = [PieceBar(2,7), PieceL(0,5), PieceS(5,6), PieceSquare(0,6)]
-
-# State definitions
-init_state = TutrisState(init_list1)  # Initial state of the problem
-goal_state = TutrisState(goal_list)   # Goal state of the problem
-
-# Validaciones de consistencia
-for i in range(len(init_state.piece_list)):
-    if init_state.piece_list[i].__class__ != goal_state.piece_list[i].__class__:
-        raise Exception("Initial and final states include different piece classes")
-        
-if not init_state.is_valid():
-    print("Invalid initial state")
-    sys.exit(0)
-
-if not goal_state.is_valid():
-    print("Invalid final state")
-    sys.exit(0)
+        return None, [], expanded, generated, execution_time
 
 #------------------------------------------------------------
-# TESTS WITH UNIFIED FUNCTION
+# CONFIGURACIÓN DE PRUEBAS
+def run_complete_evaluation():
+    # Initial states definition
+    init_states = {
+        init_list1 = [PieceBar(1,7), PieceL(1,3), PieceS(4,6), PieceSquare(0,4)]
+        init_list2 = [PieceBar(4,6), PieceL(1,5), PieceS(5,4), PieceSquare(0,3)]
+        init_list3 = [PieceBar(4,6), PieceL(1,5), PieceS(3,4), PieceSquare(4,2)]
+    }
 
-print("=" * 50)
-print("=" * 7 + " PRACTICA 1: ALGORITMOS DE BUSQUEDA " + "=" * 7)
-print("=" * 50)
+    # Objective state
+    goal_list = [PieceBar(2,7), PieceL(0,5), PieceS(5,6), PieceSquare(0,6)]
+    goal_state = TutrisState(goal_list)
 
-print("\n" + "=" * 35)
-print("BUSQUEDAS NO INFORMADAS")
-print("=" * 35)
+    # Testing algorithms 
+    algorithms = [
+        (breadth_first, "Busqueda primero en anchura", None),
+        (depth_first, "Busqueda primero en profundidad", None),
+        (uniform_cost, "Busqueda de coste uniforme", None)
+    ]
 
-test_algorithm(breadth_first, "Busqueda primero en anchura", init_state, goal_state)
-test_algorithm(depth_first, "Busqueda primero en profundidad", init_state, goal_state)
-test_algorithm(uniform_cost, "Busqueda de coste uniforme", init_state, goal_state)
+    # Heuristics for informed search 
+    heuristics = [
+        (h0_zero, "h0_sin_heuristica"),
+        (h1_manhattan, "h1_manhattan"), 
+        (h2_weighted_manhattan, "h2_manhattan_peso"),
+        (h3_blocking_pieces, "h3_piezas_bloqueantes")
+    ]
 
-print("\n\n" + "=" * 35)
-print("BUSQUEDAS INFORMADAS")
-print("=" * 50)
+    # Informed algorithms
+    for heuristic_func, heuristic_name in heuristics:
+        algorithms.append((greedy, "Busqueda voraz (" + heuristic_name + ")", heuristic_func))
+        algorithms.append((a_star, "A* (" + heuristic_name + ")", heuristic_func))
 
-# Definir heurísticas a probar
-heuristics_to_test = [
-    (h0_zero, "h0_zero"),
-    (h1_manhattan, "h1_manhattan"), 
-    (h2_weighted_manhattan, "h2_weighted_manhattan"),
-    (h3_blocking_pieces, "h3_blocking_pieces")
-]
+    # Complete results
+    all_results = []
+    best_solutions = {}
 
-for heuristic, heuristic_name in heuristics_to_test:
-    print("\n--- Heurística: %s ---" % heuristic_name)
-    test_algorithm(greedy, "Busqueda voraz/primero el mejor (%s)" % heuristic_name, init_state, goal_state, heuristic)
-    test_algorithm(a_star, "A* (%s)" % heuristic_name, init_state, goal_state, heuristic)
+    print("=" * 50)
+    print(" Evaluacion completa de algoritmos de busqueda ")
+    print("=" * 50)
+
+    #Probar con cada estado inicial
+    print("\n\n" + "-" * 50)
+    print(" Estado inicial: " + state_name)
+    print("-" * 50)
+
+    init_state = TutrisState(piece_list)
+
+    for algorithm_func, algorithm_name, heuristic in algorithms:
+        # Test
+        solution, steps, expanded, generated, exec_time = test_algorithm(
+            algorithm_func, algorithm_name, init_state, goal_state, heuristic
+        )
+
+        #Guardar resultados
+        result = {
+            'estado_inicial': state_name,
+            'algoritmo': algorithm_name,
+            'heuristica': heuristic.__name__ if heuristic else "N/A",
+            'solucion_encontrada': solution is not None,
+            'pasos_solucion': len(steps) if solution else 0,
+            'nodos_expandidos': expanded,
+            'nodos_generados': generated,
+            'tiempo_ejecucion': exec_time,
+            'tiene_solucion_visualizable': solution is not None and len(steps) > 0
+        }
+        all_results.append(result)
+
+        # Guardar mejor solucion para visualizacion
+        if solution and len(steps) > 0:
+            key = state_name + "_" + algorithm_name.replace(' ', '_')
+            if key not in best_solutions or len(steps) < len(best_solutions[key]['steps']):
+                best_solutions[key] = {
+                    'algorithm': algorithm_name,
+                    'steps': steps,
+                    'state_name': state_name,
+                    'init_state': init_state,
+                    'goal_state': goal_state,
+                    'pasos': len(steps)
+                    'expandidos': expanded
+                }
 
 #------------------------------------------------------------
 
