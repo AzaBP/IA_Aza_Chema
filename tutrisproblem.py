@@ -16,7 +16,7 @@ def reconstruct_path(solution_node):
     return steps
 
 def test_algorithm(algorithm, algorithm_name, init_state, goal_state, heuristic=None):
-    print("\n --- Probando %s ---" + algorithm_name)
+    print("\n --- Probando %s ---" % algorithm_name)
     start_time = time.perf_counter()
     try:
         if heuristic:
@@ -46,9 +46,9 @@ def test_algorithm(algorithm, algorithm_name, init_state, goal_state, heuristic=
 def run_complete_evaluation():
     # Initial states definition
     init_states = {
-        init_list1 = [PieceBar(1,7), PieceL(1,3), PieceS(4,6), PieceSquare(0,4)]
-        init_list2 = [PieceBar(4,6), PieceL(1,5), PieceS(5,4), PieceSquare(0,3)]
-        init_list3 = [PieceBar(4,6), PieceL(1,5), PieceS(3,4), PieceSquare(4,2)]
+        "init_list1": [PieceBar(1,7), PieceL(1,3), PieceS(4,6), PieceSquare(0,4)],
+        "init_list2": [PieceBar(4,6), PieceL(1,5), PieceS(5,4), PieceSquare(0,3)],
+        "init_list3": [PieceBar(4,6), PieceL(1,5), PieceS(3,4), PieceSquare(4,2)]
     }
 
     # Objective state
@@ -63,15 +63,9 @@ def run_complete_evaluation():
     ]
 
     # Heuristics for informed search 
-    heuristics = [
-        (h0_zero, "h0_sin_heuristica"),
-        (h1_manhattan, "h1_manhattan"), 
-        (h2_weighted_manhattan, "h2_manhattan_peso"),
-        (h3_blocking_pieces, "h3_piezas_bloqueantes")
-    ]
-
-    # Informed algorithms
-    for heuristic_func, heuristic_name in heuristics:
+    heuristics = [h0_zero, h1_manhattan, h2_weighted_manhattan, h3_blocking_pieces]    
+    for heuristic_func in heuristics:
+        heuristic_name = heuristic.__name__
         algorithms.append((greedy, "Busqueda voraz (" + heuristic_name + ")", heuristic_func))
         algorithms.append((a_star, "A* (" + heuristic_name + ")", heuristic_func))
 
@@ -84,83 +78,130 @@ def run_complete_evaluation():
     print("=" * 50)
 
     #Probar con cada estado inicial
-    print("\n\n" + "-" * 50)
-    print(" Estado inicial: " + state_name)
-    print("-" * 50)
+    for state_name, piece_list in init_states.items():
+        print("\n\n" + "-" * 50)
+        print(" Estado inicial: " + state_name)
+        print("-" * 50)
 
-    init_state = TutrisState(piece_list)
+        init_state = TutrisState(piece_list)
 
-    for algorithm_func, algorithm_name, heuristic in algorithms:
-        # Test
-        solution, steps, expanded, generated, exec_time = test_algorithm(
-            algorithm_func, algorithm_name, init_state, goal_state, heuristic
-        )
+        for algorithm_func, algorithm_name, heuristic in algorithms:
+            # Test algorithm
+            solution, steps, expanded, generated, exec_time = test_algorithm(
+                algorithm_func, algorithm_name, init_state, goal_state, heuristic
+            )
 
-        #Guardar resultados
-        result = {
-            'estado_inicial': state_name,
-            'algoritmo': algorithm_name,
-            'heuristica': heuristic.__name__ if heuristic else "N/A",
-            'solucion_encontrada': solution is not None,
-            'pasos_solucion': len(steps) if solution else 0,
-            'nodos_expandidos': expanded,
-            'nodos_generados': generated,
-            'tiempo_ejecucion': exec_time,
-            'tiene_solucion_visualizable': solution is not None and len(steps) > 0
-        }
-        all_results.append(result)
+            #Guardar resultados
+            result = {
+                'estado_inicial': state_name,
+                'algoritmo': algorithm_name,
+                'heuristica': heuristic.__name__ if heuristic else "N/A",
+                'solucion_encontrada': solution is not None,
+                'pasos_solucion': len(steps) if solution else 0,
+                'nodos_expandidos': expanded,
+                'nodos_generados': generated,
+                'tiempo_ejecucion': exec_time,
+                'tiene_solucion_visualizable': solution is not None and len(steps) > 0
+            }
+            all_results.append(result)
 
-        # Guardar mejor solucion para visualizacion
-        if solution and len(steps) > 0:
-            key = state_name + "_" + algorithm_name.replace(' ', '_')
-            if key not in best_solutions or len(steps) < len(best_solutions[key]['steps']):
-                best_solutions[key] = {
-                    'algorithm': algorithm_name,
-                    'steps': steps,
-                    'state_name': state_name,
-                    'init_state': init_state,
-                    'goal_state': goal_state,
-                    'pasos': len(steps)
-                    'expandidos': expanded
-                }
+            # Guardar mejor solucion para visualizacion
+            if solution and len(steps) > 0:
+                key = state_name + "_" + algorithm_name.replace(' ', '_')
+                if key not in best_solutions or len(steps) < len(best_solutions[key]['steps']):
+                    best_solutions[key] = {
+                        'algorithm': algorithm_name,
+                        'steps': steps,
+                        'state_name': state_name,
+                        'init_state': init_state,
+                        'goal_state': goal_state,
+                        'pasos': len(steps),
+                        'expandidos': expanded
+                    }
 
-#------------------------------------------------------------
+    generate_report(all_results, best_solutions)
+    return all_results, best_solutions
 
-# greedy Search algorithm
-start = time.perf_counter()
-solution_greedy, expanded, generated = greedy(init_state, goal_state, h1_manhattan)
-end = time.perf_counter()
-if solution_greedy != None:
-    print("greedy (h1) found a solution after %.2f seconds..." % (end - start))
-else:
-    print("greedy (h1) failed after %.2f seconds..." % (end - start))
-show_solution(solution_greedy, expanded, generated)
+def generate_report(results, best_solutions):
+    # Generates detailed report of results
+    print("\n\n" + "=" * 50)
+    print(" RESUMEN DE RESULTADOS ")
+    print("=" * 50)
 
-# A* Search algorithm (h1)
-start = time.perf_counter()
-solution_astar, expanded, generated = a_star(init_state, goal_state, h1_manhattan)
-end = time.perf_counter()
-if solution_astar != None:
-    print("A* (h1) found a solution after %.2f seconds..." % (end - start))
-else:
-    print("A* (h1) failed after %.2f seconds..." % (end - start))
-show_solution(solution_astar, expanded, generated)
+    print("\nResumen por algoritmo: " + "-" * 27)
+    algorithm_results = {}
+    for result in results:
+        algo = result['algoritmo']
+        if algo not in algorithm_results:
+            algorithm_results[algo] = []
+        algorithm_results[algo].append(result)
+    
+    # Print summary per algorithm
+    for algorithm_name, algorithm_data in algorithm_results.items():
+        solutions_found = sum(1 for rresult in algorithm_data if result['solucion_encontrada'])
+        total_tests = len(algorithm_data)
+        avg_steps = sum(result['pasos_solucion'] for result in algorithm_data if result['solucion_encontrada']) / solutions_found if solutions_found > 0 else 0
+        avg_expanded = sum(result['nodos_expandidos'] for result in algorithm_data) / total_tests
+        avg_time = sum(result['tiempo_ejecucion'] for result in algorithm_data) / total_tests
 
-#------------------------------------------------------------
-print("\n\n" + "=" * 35)
-print("VISUALIZACION (Si existe solucion)")
-print("=" * 35)
+        print("\n" + algorithm_name + ":")
+        print("  Soluciones encontradas: %d/%d (%.1f%%)" % (solutions_found, total_tests, (solutions_found / total_tests) * 100))
+        print("  Pasos promedio: %.1f" % avg_steps)
+        print("  Nodos expandidos promedio: %.1f" % avg_expanded)
+        print("  Tiempo de ejecucion promedio: %.3f segundos" % avg_time)
 
-# Probar A* con h1_manhattan para visualización
-solution, steps, expanded, generated = test_algorithm(
-    a_star, "A* (h1_manhattan) - VISUAL", init_state, goal_state, h1_manhattan
-)
+    # Best solutions found
+    print("\nMEJORES SOLUCIONES ENCONTRADAS " + '-' * 19)
+    for key, solution in best_solutions.items():
+        print("  " + solution['algorithm'] + " (" + solution['state_name'] + "): " + 
+              str(solution['pasos']) + " pasos, " + str(solution['expandidos']) + " nodos expandidos")
+        
+    # Save results in file
+    filename = "resultados_p1_ia.txt"
+    with open(filename, 'w') as f:
+        f.write("RESULTADOS BUSQUEDA TUTRIS\n")
+        f.write("=" * 50 + "\n")
+        for result in results:
+            f.write("Algoritmo: %s\n" % result['algoritmo'])
+            f.write("Estado: %s, Solución: %s\n" % (result['estado_inicial'], "SÍ" if result['solucion_encontrada'] else "NO"))
+            f.write("Pasos: %d, Expandidos: %d, Tiempo: %.4f\n" % (result['pasos_solucion'], result['nodos_expandidos'], result['tiempo_ejecucion']))
+            f.write("-" * 30 + "\n")
+    
+    print("\nResultados guardados en: " + filename)
+    return results
 
-if solution and steps:
-    print("\nEjecutando visualización con %d pasos..." % len(steps))
+def visualize_solution(solution):
+    # Visualices a specific solution
     try:
-        world = TutrisWorld(init_state, goal_state, steps)
-    except Exception as ex:
-        print("Error en TutrisWorld: %s" % str(ex))
-else:
-    print("No hay solución para visualizar")
+        print("Ejecutando visualizacion con %d pasos..." % len(solution['steps']))
+        world = TutrisWorld(
+            solution['init_state'], 
+            solution['goal_state'],
+            solution['steps']
+        )
+    except Exception as e:
+        print("Error durante la visualizacion: %s" % str(e))
+
+#------------------------------------------------------------
+# MAIN PROGRAM
+if __name__ == "__main__":
+    print("=" * 80)
+    print(" PRACTICA 1: ALGORITMOS DE BUSQUEDA ")
+    print("=" * 80)
+    
+    try:
+        # Execute complete evaluation
+        all_results, best_solutions = run_complete_evaluation()
+
+        # Show visualization
+        for key, solution in best_solutions.items():
+            visualize_solution(solution)
+
+        print("Evaluacion completa finalizada.")
+        print("Revisa el archivo 'resultados_p1_ia.txt' para el resumen de resultados.")
+    
+    except Exception as e:
+        print("Error durante la evaluacion: %s" % str(e))
+        import traceback
+        traceback.print_exc()
+
