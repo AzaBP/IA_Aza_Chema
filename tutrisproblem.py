@@ -65,7 +65,7 @@ def run_complete_evaluation():
     # Heuristics for informed search 
     heuristics = [h0_zero, h1_manhattan, h2_weighted_manhattan, h3_blocking_pieces]    
     for heuristic_func in heuristics:
-        heuristic_name = heuristic.__name__
+        heuristic_name = heuristic_func.__name__
         algorithms.append((greedy, "Busqueda voraz (" + heuristic_name + ")", heuristic_func))
         algorithms.append((a_star, "A* (" + heuristic_name + ")", heuristic_func))
 
