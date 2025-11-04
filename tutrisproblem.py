@@ -157,14 +157,19 @@ def generate_report(results, best_solutions):
               str(solution['pasos']) + " pasos, " + str(solution['expandidos']) + " nodos expandidos")
         
     # Save results in file
-    filename = "resultados_p1_ia.txt"
+    filename = "res_p1_ia.txt"
     with open(filename, 'w') as f:
         f.write("RESULTADOS BUSQUEDA TUTRIS\n")
         f.write("=" * 50 + "\n")
         for result in results:
             f.write("Algoritmo: %s\n" % result['algoritmo'])
             f.write("Estado: %s, Solución: %s\n" % (result['estado_inicial'], "SÍ" if result['solucion_encontrada'] else "NO"))
-            f.write("Pasos: %d, Expandidos: %d, Tiempo: %.4f\n" % (result['pasos_solucion'], result['nodos_expandidos'], result['tiempo_ejecucion']))
+            f.write("Pasos: %d, Expandidos: %d, Generados: %d, Tiempo: %.4f\n" % (
+                result['pasos_solucion'],
+                result['nodos_expandidos'],
+                result.get('nodos_generados', 0),
+                result['tiempo_ejecucion']
+            ))
             f.write("-" * 30 + "\n")
     
     print("\nResultados guardados en: " + filename)
@@ -194,11 +199,11 @@ if __name__ == "__main__":
         all_results, best_solutions = run_complete_evaluation()
 
         # Show visualization
-        for key, solution in best_solutions.items():
-            visualize_solution(solution)
+        # for key, solution in best_solutions.items(): ########################################
+        #     visualize_solution(solution)              ########################################
 
         print("Evaluacion completa finalizada.")
-        print("Revisa el archivo 'resultados_p1_ia.txt' para el resumen de resultados.")
+        print("Revisa el archivo 'res_p1_ia.txt' para el resumen de resultados.")
     
     except Exception as e:
         print("Error durante la evaluacion: %s" % str(e))

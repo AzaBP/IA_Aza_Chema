@@ -35,7 +35,6 @@ class Node:
 #----------------------------------------------------------------------
 
 def uninformed_search(initial_state, goal_state, frontier):
-
     """
     Parametros:
        initial_state: estado inicial de busqueda (objeto de clase TutrisState)
@@ -51,12 +50,17 @@ def uninformed_search(initial_state, goal_state, frontier):
     explored = set()
     while not frontier.is_empty():
         node = frontier.remove()
+        # Sin la comprobación da errores en ejecución
+        if node is None:
+            return (None, expanded, generated)
         if node.state == goal_state:
             return (node, expanded, generated)
         explored.add(node.state)
         expanded += 1
         for child in node.expand():
-            in_frontier = any (n.state == child.state for n in frontier.contents)
+            # Evitar problemas de ejecucion
+            contents = getattr(frontier, 'contents', [])
+            in_frontier = any((n is not None and n.state == child.state) for n in contents)
             if child.state not in explored and not in_frontier:
                 frontier.insert(child)
                 generated += 1
@@ -97,7 +101,6 @@ def uniform_cost(initial_state, goal_state):
 #----------------------------------------------------------------------
 
 def informed_search(initial_state, goal_state, frontier, heuristic):
-
     """
     Parametros:
        initial_state: estado inicial de busqueda (objeto de clase TutrisState)
@@ -117,6 +120,9 @@ def informed_search(initial_state, goal_state, frontier, heuristic):
     explored = set()
     while not frontier.is_empty():
         node = frontier.pop()
+        # Sin la comprobación da errores en ejecución
+        if node is None:
+            return (None, expanded, generated)
         if node.state == goal_state:
             return (node, expanded, generated)
         explored.add(node.state)

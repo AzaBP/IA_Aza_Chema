@@ -2,133 +2,133 @@ RESULTADOS BUSQUEDA TUTRIS
 ==================================================
 Algoritmo: Busqueda primero en anchura
 Estado: init_list1, Solución: SÍ
-Pasos: 7, Expandidos: 308, Tiempo: 0.1831
+Pasos: 7, Expandidos: 308, Generados: 380, Tiempo: 0.1968
 ------------------------------
 Algoritmo: Busqueda primero en profundidad
 Estado: init_list1, Solución: SÍ
-Pasos: 29, Expandidos: 61, Tiempo: 0.0307
+Pasos: 29, Expandidos: 61, Generados: 133, Tiempo: 0.0226
 ------------------------------
 Algoritmo: Busqueda de coste uniforme
-Estado: init_list1, Solución: NO
-Pasos: 0, Expandidos: 0, Tiempo: inf
+Estado: init_list1, Solución: SÍ
+Pasos: 7, Expandidos: 287, Generados: 377, Tiempo: 0.1992
 ------------------------------
 Algoritmo: Busqueda voraz (h0_zero)
 Estado: init_list1, Solución: SÍ
-Pasos: 29, Expandidos: 84, Tiempo: 0.0385
+Pasos: 29, Expandidos: 84, Generados: 190, Tiempo: 0.0494
 ------------------------------
 Algoritmo: A* (h0_zero)
 Estado: init_list1, Solución: SÍ
-Pasos: 7, Expandidos: 287, Tiempo: 0.1259
+Pasos: 7, Expandidos: 287, Generados: 377, Tiempo: 0.1614
 ------------------------------
 Algoritmo: Busqueda voraz (h1_manhattan)
 Estado: init_list1, Solución: SÍ
-Pasos: 7, Expandidos: 7, Tiempo: 0.0014
+Pasos: 7, Expandidos: 7, Generados: 23, Tiempo: 0.0025
 ------------------------------
 Algoritmo: A* (h1_manhattan)
 Estado: init_list1, Solución: SÍ
-Pasos: 7, Expandidos: 23, Tiempo: 0.0081
+Pasos: 7, Expandidos: 23, Generados: 59, Tiempo: 0.0099
 ------------------------------
 Algoritmo: Busqueda voraz (h2_weighted_manhattan)
 Estado: init_list1, Solución: SÍ
-Pasos: 7, Expandidos: 7, Tiempo: 0.0022
+Pasos: 7, Expandidos: 7, Generados: 23, Tiempo: 0.0020
 ------------------------------
 Algoritmo: A* (h2_weighted_manhattan)
 Estado: init_list1, Solución: SÍ
-Pasos: 7, Expandidos: 7, Tiempo: 0.0030
+Pasos: 7, Expandidos: 7, Generados: 23, Tiempo: 0.0022
 ------------------------------
 Algoritmo: Busqueda voraz (h3_blocking_pieces)
 Estado: init_list1, Solución: SÍ
-Pasos: 7, Expandidos: 13, Tiempo: 0.0072
+Pasos: 7, Expandidos: 13, Generados: 37, Tiempo: 0.0068
 ------------------------------
 Algoritmo: A* (h3_blocking_pieces)
 Estado: init_list1, Solución: SÍ
-Pasos: 7, Expandidos: 148, Tiempo: 0.0719
+Pasos: 7, Expandidos: 148, Generados: 252, Tiempo: 0.1108
 ------------------------------
 Algoritmo: Busqueda primero en anchura
 Estado: init_list2, Solución: SÍ
-Pasos: 11, Expandidos: 964, Tiempo: 0.7290
+Pasos: 11, Expandidos: 964, Generados: 1097, Tiempo: 0.9076
 ------------------------------
 Algoritmo: Busqueda primero en profundidad
 Estado: init_list2, Solución: SÍ
-Pasos: 39, Expandidos: 506, Tiempo: 0.1643
+Pasos: 39, Expandidos: 506, Generados: 582, Tiempo: 0.1841
 ------------------------------
 Algoritmo: Busqueda de coste uniforme
-Estado: init_list2, Solución: NO
-Pasos: 0, Expandidos: 0, Tiempo: inf
+Estado: init_list2, Solución: SÍ
+Pasos: 11, Expandidos: 861, Generados: 1000, Tiempo: 0.7066
 ------------------------------
 Algoritmo: Busqueda voraz (h0_zero)
 Estado: init_list2, Solución: SÍ
-Pasos: 37, Expandidos: 320, Tiempo: 0.1432
+Pasos: 37, Expandidos: 320, Generados: 470, Tiempo: 0.1351
 ------------------------------
 Algoritmo: A* (h0_zero)
 Estado: init_list2, Solución: SÍ
-Pasos: 11, Expandidos: 861, Tiempo: 0.4258
+Pasos: 11, Expandidos: 861, Generados: 1000, Tiempo: 0.4284
 ------------------------------
 Algoritmo: Busqueda voraz (h1_manhattan)
 Estado: init_list2, Solución: SÍ
-Pasos: 13, Expandidos: 25, Tiempo: 0.0102
+Pasos: 13, Expandidos: 25, Generados: 75, Tiempo: 0.0073
 ------------------------------
 Algoritmo: A* (h1_manhattan)
 Estado: init_list2, Solución: SÍ
-Pasos: 11, Expandidos: 67, Tiempo: 0.0384
+Pasos: 11, Expandidos: 67, Generados: 201, Tiempo: 0.0378
 ------------------------------
 Algoritmo: Busqueda voraz (h2_weighted_manhattan)
 Estado: init_list2, Solución: SÍ
-Pasos: 13, Expandidos: 23, Tiempo: 0.0103
+Pasos: 13, Expandidos: 23, Generados: 72, Tiempo: 0.0088
 ------------------------------
 Algoritmo: A* (h2_weighted_manhattan)
 Estado: init_list2, Solución: SÍ
-Pasos: 11, Expandidos: 30, Tiempo: 0.0167
+Pasos: 11, Expandidos: 30, Generados: 95, Tiempo: 0.0135
 ------------------------------
 Algoritmo: Busqueda voraz (h3_blocking_pieces)
 Estado: init_list2, Solución: SÍ
-Pasos: 11, Expandidos: 75, Tiempo: 0.0406
+Pasos: 11, Expandidos: 75, Generados: 203, Tiempo: 0.0477
 ------------------------------
 Algoritmo: A* (h3_blocking_pieces)
 Estado: init_list2, Solución: SÍ
-Pasos: 11, Expandidos: 612, Tiempo: 0.3992
+Pasos: 11, Expandidos: 612, Generados: 787, Tiempo: 0.4949
 ------------------------------
 Algoritmo: Busqueda primero en anchura
 Estado: init_list3, Solución: SÍ
-Pasos: 18, Expandidos: 3564, Tiempo: 5.5648
+Pasos: 18, Expandidos: 3564, Generados: 3712, Tiempo: 6.1001
 ------------------------------
 Algoritmo: Busqueda primero en profundidad
 Estado: init_list3, Solución: SÍ
-Pasos: 40, Expandidos: 570, Tiempo: 0.1907
+Pasos: 40, Expandidos: 570, Generados: 654, Tiempo: 0.2141
 ------------------------------
 Algoritmo: Busqueda de coste uniforme
-Estado: init_list3, Solución: NO
-Pasos: 0, Expandidos: 0, Tiempo: inf
+Estado: init_list3, Solución: SÍ
+Pasos: 18, Expandidos: 3394, Generados: 3597, Tiempo: 7.3574
 ------------------------------
 Algoritmo: Busqueda voraz (h0_zero)
 Estado: init_list3, Solución: SÍ
-Pasos: 24, Expandidos: 475, Tiempo: 0.1706
+Pasos: 24, Expandidos: 475, Generados: 562, Tiempo: 0.1932
 ------------------------------
 Algoritmo: A* (h0_zero)
 Estado: init_list3, Solución: SÍ
-Pasos: 18, Expandidos: 3394, Tiempo: 3.5878
+Pasos: 18, Expandidos: 3394, Generados: 3597, Tiempo: 3.7376
 ------------------------------
 Algoritmo: Busqueda voraz (h1_manhattan)
 Estado: init_list3, Solución: SÍ
-Pasos: 20, Expandidos: 23, Tiempo: 0.0082
+Pasos: 20, Expandidos: 23, Generados: 87, Tiempo: 0.0075
 ------------------------------
 Algoritmo: A* (h1_manhattan)
 Estado: init_list3, Solución: SÍ
-Pasos: 18, Expandidos: 559, Tiempo: 1.0650
+Pasos: 18, Expandidos: 559, Generados: 1273, Tiempo: 1.3384
 ------------------------------
 Algoritmo: Busqueda voraz (h2_weighted_manhattan)
 Estado: init_list3, Solución: SÍ
-Pasos: 20, Expandidos: 27, Tiempo: 0.0132
+Pasos: 20, Expandidos: 27, Generados: 93, Tiempo: 0.0118
 ------------------------------
 Algoritmo: A* (h2_weighted_manhattan)
 Estado: init_list3, Solución: SÍ
-Pasos: 20, Expandidos: 259, Tiempo: 0.2902
+Pasos: 20, Expandidos: 259, Generados: 677, Tiempo: 0.3613
 ------------------------------
 Algoritmo: Busqueda voraz (h3_blocking_pieces)
 Estado: init_list3, Solución: SÍ
-Pasos: 22, Expandidos: 95, Tiempo: 0.0674
+Pasos: 22, Expandidos: 95, Generados: 277, Tiempo: 0.0644
 ------------------------------
 Algoritmo: A* (h3_blocking_pieces)
 Estado: init_list3, Solución: SÍ
-Pasos: 18, Expandidos: 2608, Tiempo: 3.3464
+Pasos: 18, Expandidos: 2608, Generados: 2794, Tiempo: 3.4519
 ------------------------------
